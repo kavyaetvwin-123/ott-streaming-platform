@@ -77,6 +77,6 @@ function logout() {
 
     alert("Logged out Successfully!");
 
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 
 }
