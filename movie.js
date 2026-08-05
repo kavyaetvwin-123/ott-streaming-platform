@@ -1,4 +1,4 @@
-fetch("http://localhost:8080/movies")
+fetch("https://ott-streaming-backend-production.up.railway.app/movies")
 
 .then(res=>res.json())
 

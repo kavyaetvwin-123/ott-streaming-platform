@@ -9,7 +9,7 @@ function login() {
         return;
     }
 
-    fetch("http://localhost:8080/login", {
+    fetch("https://ott-streaming-backend-production.up.railway.app/login", {
 
         method: "POST",
 

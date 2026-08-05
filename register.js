@@ -28,18 +28,17 @@ function register() {
 
     console.log("Sending User:", user);
 
-    fetch("http://localhost:8080/users", {
+    fetch("https://ott-streaming-backend-production.up.railway.app/users", {
 
-        method: "POST",
+    method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+    headers: {
+        "Content-Type": "application/json"
+    },
 
-        body: JSON.stringify(user)
+    body: JSON.stringify(user)
 
-    })
-
+})
     .then(response => {
 
         console.log("Status:", response.status);

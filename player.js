@@ -19,7 +19,7 @@ document.getElementById("username").innerText = user.name;
 // Load Movie Details
 // ======================================
 
-fetch("http://localhost:8080/movies/" + movieId)
+fetch("https://ott-streaming-backend-production.up.railway.app/movies/" + movieId)
 
 .then(response => response.json())
 
@@ -58,8 +58,8 @@ function initializeAnalytics(video){
     let previousTime = 0;
 
     function sendAnalytics(eventType){
-
-        fetch("http://localhost:8080/analytics",{
+fetch("https://ott-streaming-backend-production.up.railway.app/analytics"
+        ,{
 
             method:"POST",
 
@@ -142,7 +142,7 @@ function initializeAnalytics(video){
 
 function loadAnalytics(){
 
-    fetch("http://localhost:8080/analytics")
+    fetch("https://ott-streaming-backend-production.up.railway.app/analytics")
 
     .then(response=>response.json())
 

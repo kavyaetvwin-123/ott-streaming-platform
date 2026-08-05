@@ -1,4 +1,4 @@
-fetch("http://localhost:8080/analytics")
+fetch("https://ott-streaming-backend-production.up.railway.app/analytics")
 
 .then(response => response.json())
 

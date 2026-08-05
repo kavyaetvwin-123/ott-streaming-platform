@@ -12,7 +12,7 @@ if (!user) {
 }
 
 // Fetch movie from Spring Boot
-fetch("http://localhost:8080/movies")
+fetch("https://ott-streaming-backend-production.up.railway.app/movies")
 
 .then(response => response.json())
 
