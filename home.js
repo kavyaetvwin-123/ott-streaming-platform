@@ -1,0 +1,82 @@
+// Show logged-in user's name
+const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+if (!user) {
+
+    window.location.href = "login.html";
+
+} else {
+
+    document.getElementById("username").innerText = user.name;
+
+}
+
+// Fetch movie from Spring Boot
+fetch("http://localhost:8080/movies")
+
+.then(response => response.json())
+
+.then(movies => {
+
+    const container = document.getElementById("movieContainer");
+
+    container.innerHTML = "";
+
+    movies.forEach(movie => {
+
+        container.innerHTML += `
+
+        <div class="movie-card">
+
+            <img src="${movie.poster}" alt="${movie.title}">
+
+            <div class="movie-info">
+
+                <h2>${movie.title}</h2>
+
+                <p><strong>Genre :</strong> ${movie.genre}</p>
+
+                <p><strong>Language :</strong> ${movie.language}</p>
+
+                <p><strong>Duration :</strong> ${movie.duration} mins</p>
+
+                <button onclick="watchMovie(${movie.id})">
+
+                    ▶ Watch Movie
+
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+})
+
+.catch(error => {
+
+    console.log(error);
+
+});
+
+
+function watchMovie(movieId){
+
+    localStorage.setItem("movieId", movieId);
+
+    window.location.href = "player.html";
+
+}
+
+function logout() {
+
+    localStorage.removeItem("loggedInUser");
+
+    alert("Logged out Successfully!");
+
+    window.location.href = "login.html";
+
+}

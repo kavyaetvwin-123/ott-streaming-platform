@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OTT Streaming Platform | Player</title>
+
+    <link rel="stylesheet" href="player.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+
+        OTT Streaming Platform
+
+    </div>
+
+    <div class="welcome">
+
+        Hello, <span id="username"></span> 👋
+
+    </div>
+
+</header>
+
+<main class="player-page">
+
+    <button class="back-btn" onclick="goHome()">
+
+        ← Back to Home
+
+    </button>
+
+    <h1 id="movieTitle">
+
+        Loading...
+
+    </h1>
+
+    <div class="movie-details">
+
+        <span id="movieGenre"></span>
+
+        <span>•</span>
+
+        <span id="movieLanguage"></span>
+
+        <span>•</span>
+
+        <span id="movieDuration"></span>
+
+    </div>
+
+    <div class="video-section">
+
+        <video id="videoPlayer" controls>
+
+            <source src="videos/sample_movie.mp4" type="video/mp4">
+
+            Your browser does not support HTML5 video.
+
+        </video>
+
+    </div>
+
+<div class="description">
+
+    <h2>Description</h2>
+
+    <p id="movieDescription">
+
+        Enjoy your movie.
+
+    </p>
+
+</div>
+
+<!-- Live Analytics -->
+<div class="analytics-section">
+
+    <h2>Live Analytics</h2>
+
+    <table id="analyticsTable">
+
+        <thead>
+
+        <tr>
+            <th>#</th>
+            <th>Event</th>
+
+            <th>Playback Time</th>
+
+            <th>Event Time</th>
+            <th>Status</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</main>
+
+<script src="player.js"></script>
+
+</body>
+
+</html>
