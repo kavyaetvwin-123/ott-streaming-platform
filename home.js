@@ -12,7 +12,7 @@ if (!user) {
 }
 
 // Fetch movie from Spring Boot
-fetch("https://ott-streaming-backend-production.up.railway.app/movies")
+fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/movies")
 
 .then(response => response.json())
 
