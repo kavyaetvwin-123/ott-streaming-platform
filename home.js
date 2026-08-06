@@ -1,31 +1,20 @@
-// ===============================
-// Check Logged-in User
-// ===============================
-
+// Show logged-in user's name
 const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
 if (!user) {
+
     window.location.href = "index.html";
+
 } else {
+
     document.getElementById("username").innerText = user.name;
+
 }
 
-// ===============================
-// Fetch Movies
-// ===============================
-
+// Fetch movie from Spring Boot
 fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/movies")
 
-.then(response => {
-
-    if (!response.ok) {
-        throw new Error("Unable to fetch movies");
-    }
-
-    return response.json();
-
-})
-
+.then(response => response.json())
 .then(movies => {
 
     console.log("Movies received:", movies);
@@ -34,68 +23,48 @@ fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/movies")
 
     container.innerHTML = "";
 
-    if (movies.length === 0) {
-
-        container.innerHTML = "<h2>No Movies Available</h2>";
-        return;
-
-    }
-
     movies.forEach(movie => {
 
-        const card = document.createElement("div");
-        card.className = "movie-card";
+        container.innerHTML += `
+        <div class="movie-card">
 
-        card.innerHTML = `
             <img src="${movie.poster}" alt="${movie.title}">
 
             <div class="movie-info">
 
                 <h2>${movie.title}</h2>
 
-                <p><strong>Genre:</strong> ${movie.genre}</p>
+                <p><strong>Genre :</strong> ${movie.genre}</p>
 
-                <p><strong>Language:</strong> ${movie.language}</p>
+                <p><strong>Language :</strong> ${movie.language}</p>
 
-                <p><strong>Duration:</strong> ${movie.duration} mins</p>
+                <p><strong>Duration :</strong> ${movie.duration} mins</p>
 
                 <button onclick="watchMovie(${movie.id})">
                     ▶ Watch Movie
                 </button>
 
             </div>
-        `;
 
-        container.appendChild(card);
+        </div>
+        `;
 
     });
 
+    console.log(container.innerHTML);
+
 })
-
 .catch(error => {
-
-    console.error("Movie Fetch Error:", error);
-
-    document.getElementById("movieContainer").innerHTML =
-        `<h2 style="color:red;">${error.message}</h2>`;
-
+    console.error(error);
 });
 
-// ===============================
-// Watch Movie
-// ===============================
-
-function watchMovie(movieId) {
+function watchMovie(movieId){
 
     localStorage.setItem("movieId", movieId);
 
     window.location.href = "player.html";
 
 }
-
-// ===============================
-// Logout
-// ===============================
 
 function logout() {
 
