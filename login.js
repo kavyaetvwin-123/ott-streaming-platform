@@ -1,3 +1,5 @@
+console.log("login.js loaded");
+
 function login() {
 
     const email = document.getElementById("email").value;
