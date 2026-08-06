@@ -18,6 +18,7 @@ fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/movies")
 
 .then(movies => {
 
+     console.log("Movies received:", movies);
     const container = document.getElementById("movieContainer");
 
     container.innerHTML = "";
