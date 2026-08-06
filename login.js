@@ -9,7 +9,7 @@ function login() {
         return;
     }
 
-    fetch("https://ott-streaming-backend-production.up.railway.app/login", {
+    fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/login", {
 
         method: "POST",
 

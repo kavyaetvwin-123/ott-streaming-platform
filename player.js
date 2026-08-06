@@ -1,233 +1,195 @@
-// ======================================
+// ==========================================
 // Logged-in User
-// ======================================
+// ==========================================
 
-const user = JSON.parse(localStorage.getItem("loggedInUser"));
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+if (!loggedInUser) {
+    alert("Please login first.");
+    window.location.href = "index.html";
+}
+
+// ==========================================
+// Selected Movie
+// ==========================================
+
 const movieId = localStorage.getItem("movieId");
 
-// Current Session Start Time
-const sessionStart = new Date();
-
-if (!user) {
-    alert("Please login first.");
-    window.location.href = "login.html";
+if (!movieId) {
+    alert("No movie selected.");
+    window.location.href = "home.html";
 }
 
-document.getElementById("username").innerText = user.name;
+// ==========================================
+// Video Player
+// ==========================================
 
-// ======================================
-// Load Movie Details
-// ======================================
+const video = document.getElementById("video");
 
-fetch("https://ott-streaming-backend-production.up.railway.app/movies/" + movieId)
+// Replace this with your actual HLS file path
+const videoSource = "HLS/master.m3u8";
 
-.then(response => response.json())
+if (Hls.isSupported()) {
 
-.then(movie => {
+    const hls = new Hls();
 
-    document.getElementById("movieTitle").innerText = movie.title;
+    hls.loadSource(videoSource);
 
-    document.getElementById("movieGenre").innerText = movie.genre;
+    hls.attachMedia(video);
 
-    document.getElementById("movieLanguage").innerText = movie.language;
+    hls.on(Hls.Events.MANIFEST_PARSED, function () {
 
-    document.getElementById("movieDuration").innerText =
-        movie.duration + " mins";
-
-    document.getElementById("movieDescription").innerText =
-        movie.description || "Enjoy your movie.";
-
-    const video = document.getElementById("videoPlayer");
-
-    video.src = movie.hlsUrl;
-
-    initializeAnalytics(video);
-
-    loadAnalytics();
-
-})
-
-.catch(error => console.log(error));
-
-// ======================================
-// Analytics
-// ======================================
-
-function initializeAnalytics(video){
-
-    let previousTime = 0;
-
-    function sendAnalytics(eventType){
-fetch("https://ott-streaming-backend-production.up.railway.app/analytics"
-        ,{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                userId:user.id,
-
-                movieId:Number(movieId),
-
-                eventType:eventType,
-
-                playbackTime:video.currentTime
-
-            })
-
-        })
-
-        .then(response=>response.json())
-
-        .then(data=>{
-
-            loadAnalytics();
-
-        })
-
-        .catch(error=>console.log(error));
-
-    }
-
-    // PLAY
-    video.addEventListener("play",()=>{
-
-        sendAnalytics("PLAY");
+        console.log("HLS Manifest Loaded");
 
     });
 
-    // PAUSE
-    video.addEventListener("pause",()=>{
+} else if (video.canPlayType("application/vnd.apple.mpegurl")) {
 
-        sendAnalytics("PAUSE");
-
-    });
-
-    // COMPLETED
-    video.addEventListener("ended",()=>{
-
-        sendAnalytics("COMPLETED");
-
-    });
-
-    // FORWARD / BACKWARD
-
-    video.addEventListener("timeupdate",()=>{
-
-        if(video.currentTime > previousTime + 5){
-
-            sendAnalytics("FORWARD");
-
-        }
-
-        if(video.currentTime < previousTime - 5){
-
-            sendAnalytics("BACKWARD");
-
-        }
-
-        previousTime = video.currentTime;
-
-    });
+    video.src = videoSource;
 
 }
 
-// ======================================
-// Load Analytics Table
-// ======================================
+// ==========================================
+// Save Analytics
+// ==========================================
 
-function loadAnalytics(){
+function saveAnalytics(eventType, playbackTime) {
 
-    fetch("https://ott-streaming-backend-production.up.railway.app/analytics")
+    fetch("https://ott-streaming-backend-production.up.railway.app/analytics", {
 
-    .then(response=>response.json())
+        method: "POST",
 
-    .then(data=>{
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-        const tbody = document.querySelector("#analyticsTable tbody");
+        body: JSON.stringify({
 
-        tbody.innerHTML = "";
+            userId: loggedInUser.id,
+            movieId: Number(movieId),
+            eventType: eventType,
+            playbackTime: playbackTime
 
-        let count = 1;
-
-        data.forEach(item=>{
-
-            // Only current user
-            if(item.userId != user.id) return;
-
-            // Only current movie
-            if(item.movieId != Number(movieId)) return;
-
-            // Only current session
-            const eventDate = new Date(item.eventTime);
-
-            if(eventDate < sessionStart) return;
-
-            let icon = "";
-
-            switch(item.eventType){
-
-                case "PLAY":
-                    icon = "▶";
-                    break;
-
-                case "PAUSE":
-                    icon = "⏸";
-                    break;
-
-                case "FORWARD":
-                    icon = "⏩";
-                    break;
-
-                case "BACKWARD":
-                    icon = "⏪";
-                    break;
-
-                case "COMPLETED":
-                    icon = "✅";
-                    break;
-
-                default:
-                    icon = "🎬";
-
-            }
-
-            tbody.innerHTML += `
-
-            <tr>
-
-                <td>${count++}</td>
-
-                <td>${icon} ${item.eventType}</td>
-
-                <td>${Number(item.playbackTime).toFixed(2)} sec</td>
-
-                <td>${new Date(item.eventTime).toLocaleTimeString()}</td>
-
-                <td style="color:green;font-weight:bold;">Success</td>
-
-            </tr>
-
-            `;
-
-        });
+        })
 
     })
 
-    .catch(error=>console.log(error));
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Failed to save analytics");
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        console.log("Analytics Saved:", data);
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+    });
 
 }
 
-// ======================================
-// Back to Home
-// ======================================
+// ==========================================
+// PLAY
+// ==========================================
 
-function goHome(){
+video.addEventListener("play", () => {
 
-    window.location.href = "home.html";
+    console.log("PLAY");
 
-}
+    saveAnalytics("PLAY", video.currentTime);
+
+});
+
+// ==========================================
+// PAUSE
+// ==========================================
+
+video.addEventListener("pause", () => {
+
+    console.log("PAUSE");
+
+    saveAnalytics("PAUSE", video.currentTime);
+
+});
+
+// ==========================================
+// SEEK
+// ==========================================
+
+let previousTime = 0;
+
+video.addEventListener("seeked", () => {
+
+    if (video.currentTime > previousTime) {
+
+        saveAnalytics("SEEK_FORWARD", video.currentTime);
+
+    } else {
+
+        saveAnalytics("SEEK_BACKWARD", video.currentTime);
+
+    }
+
+    previousTime = video.currentTime;
+
+});
+
+// ==========================================
+// VOLUME CHANGE
+// ==========================================
+
+video.addEventListener("volumechange", () => {
+
+    saveAnalytics("VOLUME_CHANGE", video.currentTime);
+
+});
+
+// ==========================================
+// WATCH TIMER
+// ==========================================
+
+let watchTimer = null;
+
+video.addEventListener("play", () => {
+
+    watchTimer = setInterval(() => {
+
+        console.log("Watching: " + video.currentTime.toFixed(2) + " sec");
+
+    }, 10000);
+
+});
+
+video.addEventListener("pause", () => {
+
+    clearInterval(watchTimer);
+
+});
+
+video.addEventListener("ended", () => {
+
+    clearInterval(watchTimer);
+
+});
+
+// ==========================================
+// COMPLETED
+// ==========================================
+
+video.addEventListener("ended", () => {
+
+    console.log("Video Completed");
+
+    saveAnalytics("COMPLETED", video.currentTime);
+
+});

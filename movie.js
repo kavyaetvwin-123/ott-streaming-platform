@@ -1,23 +1,43 @@
+// Fetch all movies from backend
 fetch("https://ott-streaming-backend-production.up.railway.app/movies")
+    .then(response => {
 
-.then(res=>res.json())
+        if (!response.ok) {
+            throw new Error("Failed to load movies.");
+        }
 
-.then(data=>{
+        return response.json();
 
-    let movie=data[0];
+    })
 
-    document.getElementById("title").innerText=movie.title;
+    .then(data => {
 
-    document.getElementById("genre").innerText="Genre : "+movie.genre;
+        if (data.length === 0) {
+            document.getElementById("title").innerText = "No Movies Available";
+            return;
+        }
 
-    document.getElementById("language").innerText="Language : "+movie.language;
+        const movie = data[0];
 
-    document.getElementById("duration").innerText="Duration : "+movie.duration+" mins";
+        document.getElementById("title").innerText = movie.title;
+        document.getElementById("genre").innerText = "Genre : " + movie.genre;
+        document.getElementById("language").innerText = "Language : " + movie.language;
+        document.getElementById("duration").innerText = "Duration : " + movie.duration + " mins";
 
-    document.getElementById("watchBtn").onclick=function(){
+        document.getElementById("watchBtn").addEventListener("click", () => {
 
-        window.location.href="index.html";
+            localStorage.setItem("movieId", movie.id);
 
-    }
+            window.location.href = "player.html";
 
-})
+        });
+
+    })
+
+    .catch(error => {
+
+        console.error("Error:", error);
+
+        alert("Unable to load movie details.");
+
+    });

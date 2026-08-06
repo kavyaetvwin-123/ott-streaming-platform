@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>OTT Player</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie Details | OTT Streaming Platform</title>
 
     <link rel="stylesheet" href="style.css">
 
@@ -11,44 +15,45 @@
 
 <body>
 
-    <header>
+<header>
 
-        <h1>OTT Streaming</h1>
+    <h1>OTT Streaming Platform</h1>
 
-    </header>
+</header>
 
-    <div class="movie-container">
+<div class="movie-container">
 
-        <div class="movie-card">
+    <div class="movie-card">
 
-            <img
-                src="https://picsum.photos/350/500"
-                alt="Poster"
-                class="poster">
+        <img
+            id="poster"
+            src="https://picsum.photos/350/500"
+            alt="Movie Poster"
+            class="poster">
 
-            <div class="details">
+        <div class="details">
 
-                <h2 id="title"></h2>
+            <h2 id="title">Loading...</h2>
 
-                <p id="genre"></p>
+            <p id="genre"></p>
 
-                <p id="language"></p>
+            <p id="language"></p>
 
-                <p id="duration"></p>
+            <p id="duration"></p>
 
-                <button id="watchBtn">
+            <button id="watchBtn">
 
-                    ▶ Watch Now
+                ▶ Watch Now
 
-                </button>
-
-            </div>
+            </button>
 
         </div>
 
     </div>
 
-    <script src="movie.js"></script>
+</div>
+
+<script src="movie.js"></script>
 
 </body>
 

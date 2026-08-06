@@ -7,17 +7,13 @@ function register() {
 
     // Validation
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
-
         alert("Please fill all fields.");
         return;
-
     }
 
     if (password !== confirmPassword) {
-
         alert("Passwords do not match.");
         return;
-
     }
 
     const user = {
@@ -29,24 +25,19 @@ function register() {
     console.log("Sending User:", user);
 
     fetch("https://ott-streaming-backend-production.up.railway.app/users", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    })
 
-    method: "POST",
-
-    headers: {
-        "Content-Type": "application/json"
-    },
-
-    body: JSON.stringify(user)
-
-})
     .then(response => {
 
-        console.log("Status:", response.status);
+        console.log("Response Status:", response.status);
 
         if (!response.ok) {
-
             throw new Error("Registration Failed");
-
         }
 
         return response.json();
@@ -55,19 +46,20 @@ function register() {
 
     .then(data => {
 
-        console.log("User Saved:", data);
+        console.log("User Registered:", data);
 
         alert("Registration Successful!");
 
+        // Redirect to Login Page
         window.location.href = "index.html";
 
     })
 
     .catch(error => {
 
-        console.error("Error:", error);
+        console.error("Registration Error:", error);
 
-        alert("Failed to register.\n\n" + error);
+        alert(error.message);
 
     });
 
