@@ -23,9 +23,9 @@ fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/movies")
 
     container.innerHTML = "";
 
-    movies.forEach(movie => {
+movies.forEach(movie => {
 
-        container.innerHTML += `
+    container.innerHTML += `
 
         <div class="movie-card">
 
@@ -51,9 +51,8 @@ fetch("https://borrower-diploma-ergonomic.ngrok-free.dev/movies")
 
         </div>
 
-        `;
-
-    });
+    `;
+});
 
 })
 
